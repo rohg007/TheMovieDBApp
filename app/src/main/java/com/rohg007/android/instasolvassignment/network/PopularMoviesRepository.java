@@ -33,6 +33,7 @@ public class PopularMoviesRepository {
         moviesListLiveData = new MutableLiveData<>();
         responseFailureLiveData = new MutableLiveData<>(false);
         progressMutableLiveData = new MutableLiveData<>(false);
+        getPopularMovies();
     }
 
     public void getPopularMovies(){

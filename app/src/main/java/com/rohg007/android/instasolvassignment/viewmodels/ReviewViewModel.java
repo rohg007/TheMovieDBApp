@@ -13,9 +13,9 @@ public class ReviewViewModel extends AndroidViewModel {
 
     private ReviewsRepository reviewsRepository;
 
-    public ReviewViewModel(@NonNull Application application) {
+    public ReviewViewModel(@NonNull Application application, long movieID) {
         super(application);
-        reviewsRepository = new ReviewsRepository();
+        reviewsRepository = new ReviewsRepository(movieID);
     }
 
     public void getReviews(long movieID){
@@ -24,5 +24,13 @@ public class ReviewViewModel extends AndroidViewModel {
 
     public MutableLiveData<ReviewResult> getReviewResultLiveData(){
         return reviewsRepository.getReviewMutableLiveData();
+    }
+
+    public MutableLiveData<Boolean> progressMutableLiveData(){
+        return reviewsRepository.getProgressMutableLiveData();
+    }
+
+    public MutableLiveData<Boolean> failureMutableLiveData(){
+        return reviewsRepository.getFailureMutableLiveData();
     }
 }

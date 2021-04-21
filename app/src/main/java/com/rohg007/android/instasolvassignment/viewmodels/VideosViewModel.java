@@ -14,9 +14,9 @@ public class VideosViewModel extends AndroidViewModel {
 
     private VideosRepository videosRepository;
 
-    public VideosViewModel(@NonNull Application application) {
+    public VideosViewModel(@NonNull Application application, long movieID) {
         super(application);
-        videosRepository = new VideosRepository();
+        videosRepository = new VideosRepository(movieID);
     }
 
     public void getVideos(long movieID){
@@ -25,5 +25,13 @@ public class VideosViewModel extends AndroidViewModel {
 
     public MutableLiveData<VideosResult> getVideosLiveData(){
         return videosRepository.getVideoMutableLiveData();
+    }
+
+    public MutableLiveData<Boolean> progressMutableLiveData(){
+        return videosRepository.getProgressMutableLiveData();
+    }
+
+    public MutableLiveData<Boolean> failureMutableLiveData(){
+        return videosRepository.getFailureMutableLiveData();
     }
 }

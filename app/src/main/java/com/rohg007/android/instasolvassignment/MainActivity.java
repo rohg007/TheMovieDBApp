@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         movies = new ArrayList<>();
 
-        popularMoviesViewModel.getPopularMovies();
-
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         moviesRv.setLayoutManager(gridLayoutManager);
         MoviesAdapter adapter = new MoviesAdapter(movies, (movie, imageView) -> {
