@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class VideoViewModelFactory implements ViewModelProvider.Factory {
 
-    private Application application;
-    private long movieID;
+    private final Application application;
+    private final long movieID;
 
     public VideoViewModelFactory(Application application, long movieID) {
         this.application = application;

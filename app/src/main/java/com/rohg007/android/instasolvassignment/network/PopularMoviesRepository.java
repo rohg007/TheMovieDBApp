@@ -8,7 +8,6 @@ import com.rohg007.android.instasolvassignment.database.MovieDatabase;
 import com.rohg007.android.instasolvassignment.models.Movie;
 import com.rohg007.android.instasolvassignment.models.MovieEntity;
 import com.rohg007.android.instasolvassignment.models.PopularMoviesResult;
-import com.rohg007.android.instasolvassignment.utils.Keys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,11 @@ import static com.rohg007.android.instasolvassignment.utils.Keys.language;
 public class PopularMoviesRepository {
 
     private static PopularMoviesRepository popularMoviesRepository;
-    private PopularMoviesAPI popularMoviesAPI;
-    private MutableLiveData<PopularMoviesResult> moviesListLiveData;
-    private MutableLiveData<Boolean> responseFailureLiveData;
-    private MutableLiveData<Boolean> progressMutableLiveData;
-    private MovieDao movieDao;
+    private final PopularMoviesAPI popularMoviesAPI;
+    private final MutableLiveData<PopularMoviesResult> moviesListLiveData;
+    private final MutableLiveData<Boolean> responseFailureLiveData;
+    private final MutableLiveData<Boolean> progressMutableLiveData;
+    private final MovieDao movieDao;
     private LiveData<List<MovieEntity>> movieEntityLiveData;
 
     public static PopularMoviesRepository getInstance(Application application){
@@ -89,7 +88,7 @@ public class PopularMoviesRepository {
     }
 
     private static class InsertMovieAsyncTask extends AsyncTask<ArrayList<MovieEntity>, Void, Void>{
-        private MovieDao movieDao;
+        private final MovieDao movieDao;
         private InsertMovieAsyncTask(MovieDao movieDao){
             this.movieDao = movieDao;
         }

@@ -8,8 +8,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class ReviewViewModelFactory implements ViewModelProvider.Factory {
 
-    private Application mApplication;
-    private long movieID;
+    private final Application mApplication;
+    private final long movieID;
 
     public ReviewViewModelFactory(Application mApplication, long movieID) {
         this.mApplication = mApplication;

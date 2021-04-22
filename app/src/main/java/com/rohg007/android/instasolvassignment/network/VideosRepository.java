@@ -5,6 +5,8 @@ import android.util.Log;
 import com.rohg007.android.instasolvassignment.models.ReviewResult;
 import com.rohg007.android.instasolvassignment.models.VideosResult;
 
+import java.util.Objects;
+
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,10 +17,10 @@ import static com.rohg007.android.instasolvassignment.utils.Keys.language;
 
 public class VideosRepository {
 
-    private VideosAPI videosAPI;
-    private MutableLiveData<VideosResult> videoMutableLiveData;
-    private MutableLiveData<Boolean> progressMutableLiveData;
-    private MutableLiveData<Boolean> failureMutableLiveData;
+    private final VideosAPI videosAPI;
+    private final MutableLiveData<VideosResult> videoMutableLiveData;
+    private final MutableLiveData<Boolean> progressMutableLiveData;
+    private final MutableLiveData<Boolean> failureMutableLiveData;
 
     public VideosRepository(long movieID){
         videosAPI = RetrofitService.createService(VideosAPI.class);
@@ -46,7 +48,7 @@ public class VideosRepository {
             public void onFailure(Call<VideosResult> call, Throwable t) {
                 progressMutableLiveData.setValue(false);
                 failureMutableLiveData.setValue(true);
-                Log.e("Video Failure: ", t.getLocalizedMessage());
+                Log.e("Video Failure: ", Objects.requireNonNull(t.getLocalizedMessage()));
             }
         });
     }

@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 
 public class ReviewViewModel extends AndroidViewModel {
 
-    private ReviewsRepository reviewsRepository;
+    private final ReviewsRepository reviewsRepository;
 
     public ReviewViewModel(@NonNull Application application, long movieID) {
         super(application);
