@@ -15,6 +15,9 @@ import retrofit2.Response;
 import static com.rohg007.android.instasolvassignment.utils.Keys.apiKey;
 import static com.rohg007.android.instasolvassignment.utils.Keys.language;
 
+/*
+    Repository class for managing api calls and data exchange between Room
+ */
 public class VideosRepository {
 
     private final VideosAPI videosAPI;
@@ -27,6 +30,8 @@ public class VideosRepository {
         videoMutableLiveData = new MutableLiveData<>();
         progressMutableLiveData = new MutableLiveData<>(false);
         failureMutableLiveData = new MutableLiveData<>(false);
+
+        //called once to survive orientation changes
         getVideos(movieID);
     }
 

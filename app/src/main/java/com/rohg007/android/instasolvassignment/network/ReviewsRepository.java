@@ -16,6 +16,9 @@ import retrofit2.Response;
 import static com.rohg007.android.instasolvassignment.utils.Keys.apiKey;
 import static com.rohg007.android.instasolvassignment.utils.Keys.language;
 
+/*
+    Repository class for managing api calls and data exchange between Room
+ */
 public class ReviewsRepository {
 
     private final ReviewsAPI reviewsAPI;
@@ -28,6 +31,8 @@ public class ReviewsRepository {
         reviewMutableLiveData = new MutableLiveData<>();
         progressMutableLiveData = new MutableLiveData<>(false);
         failureMutableLiveData = new MutableLiveData<>(false);
+
+        //Called once to survive orientation changes
         getReviews(movieID);
     }
 

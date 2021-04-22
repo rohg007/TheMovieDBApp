@@ -21,11 +21,13 @@ import retrofit2.Response;
 import static com.rohg007.android.instasolvassignment.utils.Keys.apiKey;
 import static com.rohg007.android.instasolvassignment.utils.Keys.language;
 
+/*
+    Singleton Repository class for managing api calls and data exchange between Room
+ */
 public class PopularMoviesRepository {
 
     private static PopularMoviesRepository popularMoviesRepository;
     private final PopularMoviesAPI popularMoviesAPI;
-    private final MutableLiveData<PopularMoviesResult> moviesListLiveData;
     private final MutableLiveData<Boolean> responseFailureLiveData;
     private final MutableLiveData<Boolean> progressMutableLiveData;
     private final MovieDao movieDao;
@@ -39,13 +41,14 @@ public class PopularMoviesRepository {
 
     private PopularMoviesRepository(Application application){
         popularMoviesAPI = RetrofitService.createService(PopularMoviesAPI.class);
-        moviesListLiveData = new MutableLiveData<>();
         responseFailureLiveData = new MutableLiveData<>(false);
         progressMutableLiveData = new MutableLiveData<>(false);
         MovieDatabase database = MovieDatabase.getInstance(application);
         this.movieDao = database.movieDao();
         movieEntityLiveData = new MutableLiveData<>();
         movieEntityLiveData = movieDao.getAllMovies();
+
+        //called once to update the data only once per startup
         getPopularMovies();
     }
 
@@ -62,12 +65,14 @@ public class PopularMoviesRepository {
 
                 if(response.isSuccessful()){
                     PopularMoviesResult result = response.body();
-                    moviesListLiveData.setValue(result);
-                    ArrayList<MovieEntity> tempMovies = new ArrayList<>();
-                    for(Movie m : result.getResults()){
-                        tempMovies.add(new MovieEntity(m.getId(), m.getTitle(), m.getPosterPath(), m.getBackdropPath(), m.getOverview(), m.getReleaseDate(), m.getVoteAverage()));
+                    if(!result.getResults().isEmpty()) {
+                        deleteAllMovies();
+                        ArrayList<MovieEntity> tempMovies = new ArrayList<>();
+                        for (Movie m : result.getResults()) {
+                            tempMovies.add(new MovieEntity(m.getId(), m.getTitle(), m.getPosterPath(), m.getBackdropPath(), m.getOverview(), m.getReleaseDate(), m.getVoteAverage()));
+                        }
+                        insertMoviesToDB(tempMovies);
                     }
-                    insertMoviesToDB(tempMovies);
                 }
             }
 
@@ -83,6 +88,10 @@ public class PopularMoviesRepository {
         new InsertMovieAsyncTask(movieDao).execute(movieEntities);
     }
 
+    private void deleteAllMovies(){
+        new DeleteMoviesAsyncTask(movieDao).execute();
+    }
+
     public LiveData<List<MovieEntity>> getMovieEntityLiveData(){
         return movieEntityLiveData;
     }
@@ -92,16 +101,28 @@ public class PopularMoviesRepository {
         private InsertMovieAsyncTask(MovieDao movieDao){
             this.movieDao = movieDao;
         }
+        @SafeVarargs
         @Override
-        protected Void doInBackground(ArrayList<MovieEntity>... arrayLists) {
+        protected final Void doInBackground(ArrayList<MovieEntity>... arrayLists) {
             movieDao.insertAllMovies(arrayLists[0]);
             return null;
         }
     }
 
-    public MutableLiveData<PopularMoviesResult> getMoviesListLiveData() {
-        return moviesListLiveData;
+    private static class DeleteMoviesAsyncTask extends AsyncTask<Void, Void, Void>{
+        private final MovieDao movieDao;
+
+        public DeleteMoviesAsyncTask(MovieDao movieDao) {
+            this.movieDao = movieDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            movieDao.deleteAllMovies();
+            return null;
+        }
     }
+
 
     public MutableLiveData<Boolean> getResponseFailureLiveData() {
         return responseFailureLiveData;
