@@ -1,11 +1,19 @@
 package com.rohg007.android.instasolvassignment.network;
 
+import android.app.Application;
+import android.os.AsyncTask;
+
+import com.rohg007.android.instasolvassignment.dao.MovieDao;
+import com.rohg007.android.instasolvassignment.database.MovieDatabase;
 import com.rohg007.android.instasolvassignment.models.Movie;
+import com.rohg007.android.instasolvassignment.models.MovieEntity;
 import com.rohg007.android.instasolvassignment.models.PopularMoviesResult;
 import com.rohg007.android.instasolvassignment.utils.Keys;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,18 +29,24 @@ public class PopularMoviesRepository {
     private MutableLiveData<PopularMoviesResult> moviesListLiveData;
     private MutableLiveData<Boolean> responseFailureLiveData;
     private MutableLiveData<Boolean> progressMutableLiveData;
+    private MovieDao movieDao;
+    private LiveData<List<MovieEntity>> movieEntityLiveData;
 
-    public static PopularMoviesRepository getInstance(){
+    public static PopularMoviesRepository getInstance(Application application){
         if(popularMoviesRepository == null)
-            popularMoviesRepository = new PopularMoviesRepository();
+            popularMoviesRepository = new PopularMoviesRepository(application);
         return popularMoviesRepository;
     }
 
-    private PopularMoviesRepository(){
+    private PopularMoviesRepository(Application application){
         popularMoviesAPI = RetrofitService.createService(PopularMoviesAPI.class);
         moviesListLiveData = new MutableLiveData<>();
         responseFailureLiveData = new MutableLiveData<>(false);
         progressMutableLiveData = new MutableLiveData<>(false);
+        MovieDatabase database = MovieDatabase.getInstance(application);
+        this.movieDao = database.movieDao();
+        movieEntityLiveData = new MutableLiveData<>();
+        movieEntityLiveData = movieDao.getAllMovies();
         getPopularMovies();
     }
 
@@ -48,7 +62,13 @@ public class PopularMoviesRepository {
                 responseFailureLiveData.setValue(false);
 
                 if(response.isSuccessful()){
-                    moviesListLiveData.setValue(response.body());
+                    PopularMoviesResult result = response.body();
+                    moviesListLiveData.setValue(result);
+                    ArrayList<MovieEntity> tempMovies = new ArrayList<>();
+                    for(Movie m : result.getResults()){
+                        tempMovies.add(new MovieEntity(m.getId(), m.getTitle(), m.getPosterPath(), m.getBackdropPath(), m.getOverview(), m.getReleaseDate(), m.getVoteAverage()));
+                    }
+                    insertMoviesToDB(tempMovies);
                 }
             }
 
@@ -58,6 +78,26 @@ public class PopularMoviesRepository {
                 responseFailureLiveData.setValue(true);
             }
         });
+    }
+
+    public void insertMoviesToDB(ArrayList<MovieEntity> movieEntities){
+        new InsertMovieAsyncTask(movieDao).execute(movieEntities);
+    }
+
+    public LiveData<List<MovieEntity>> getMovieEntityLiveData(){
+        return movieEntityLiveData;
+    }
+
+    private static class InsertMovieAsyncTask extends AsyncTask<ArrayList<MovieEntity>, Void, Void>{
+        private MovieDao movieDao;
+        private InsertMovieAsyncTask(MovieDao movieDao){
+            this.movieDao = movieDao;
+        }
+        @Override
+        protected Void doInBackground(ArrayList<MovieEntity>... arrayLists) {
+            movieDao.insertAllMovies(arrayLists[0]);
+            return null;
+        }
     }
 
     public MutableLiveData<PopularMoviesResult> getMoviesListLiveData() {

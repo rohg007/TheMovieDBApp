@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -36,9 +36,20 @@
         android:layout_height="match_parent"
         android:text="Hello World!" />
 
-    <include
-        android:id="@+id/network_failure_layout"
-        layout="@layout/failure_layout"
-        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="No popular movies to display"/>
 
-</FrameLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:id="@+id/retry_fab"
+        app:icon="@drawable/ic_baseline_replay_24"
+        android:text="Retry API Call"
+        android:layout_margin="8dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

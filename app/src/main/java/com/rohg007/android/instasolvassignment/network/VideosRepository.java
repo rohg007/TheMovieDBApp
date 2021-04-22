@@ -1,5 +1,7 @@
 package com.rohg007.android.instasolvassignment.network;
 
+import android.util.Log;
+
 import com.rohg007.android.instasolvassignment.models.ReviewResult;
 import com.rohg007.android.instasolvassignment.models.VideosResult;
 
@@ -44,6 +46,7 @@ public class VideosRepository {
             public void onFailure(Call<VideosResult> call, Throwable t) {
                 progressMutableLiveData.setValue(false);
                 failureMutableLiveData.setValue(true);
+                Log.e("Video Failure: ", t.getLocalizedMessage());
             }
         });
     }

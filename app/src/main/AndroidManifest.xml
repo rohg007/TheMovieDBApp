@@ -8,12 +8,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.InstasolvAssignment">
+        android:theme="@style/Theme.InstasolvAssignment"
+        android:name=".application.InstasolvAssignmentApplication">
 
         <activity android:name=".MovieDetailActivity"
             android:theme="@style/Theme.InstasolvAssignment.NoActionBar"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:label="Popular Movies">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

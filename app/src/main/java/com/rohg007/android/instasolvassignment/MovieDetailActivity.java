@@ -29,6 +29,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.rohg007.android.instasolvassignment.adapters.ReviewsAdapter;
 import com.rohg007.android.instasolvassignment.adapters.VideosAdapter;
 import com.rohg007.android.instasolvassignment.models.Movie;
+import com.rohg007.android.instasolvassignment.models.MovieEntity;
 import com.rohg007.android.instasolvassignment.models.Review;
 import com.rohg007.android.instasolvassignment.models.Video;
 import com.rohg007.android.instasolvassignment.viewmodels.ReviewViewModel;
@@ -57,13 +58,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         Intent intent = getIntent();
-        Movie movie = intent.getParcelableExtra("MOVIE");
+        MovieEntity movie = intent.getParcelableExtra("MOVIE");
 
         reviews = new ArrayList<>();
         videos = new ArrayList<>();
 
-        ReviewViewModel reviewViewModel = new ViewModelProvider(this, new ReviewViewModelFactory(this.getApplication(), movie.getId())).get(ReviewViewModel.class);
-        VideosViewModel videosViewModel = new ViewModelProvider(this, new VideoViewModelFactory(this.getApplication(), movie.getId())).get(VideosViewModel.class);
+        ReviewViewModel reviewViewModel = new ViewModelProvider(this, new ReviewViewModelFactory(this.getApplication(), movie.getMovieId())).get(ReviewViewModel.class);
+        VideosViewModel videosViewModel = new ViewModelProvider(this, new VideoViewModelFactory(this.getApplication(), movie.getMovieId())).get(VideosViewModel.class);
 
 
         ImageView backdropHeader = findViewById(R.id.backdrop_header);
@@ -82,8 +83,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         LinearLayout reviewRetry = findViewById(R.id.review_failure);
         Button reviewRetryButton = reviewRetry.findViewById(R.id.retry_button);
 
-        videoRetryButton.setOnClickListener(view -> videosViewModel.getVideos(movie.getId()));
-        reviewRetryButton.setOnClickListener(view -> reviewViewModel.getReviews(movie.getId()));
+        videoRetryButton.setOnClickListener(view -> videosViewModel.getVideos(movie.getMovieId()));
+        reviewRetryButton.setOnClickListener(view -> reviewViewModel.getReviews(movie.getMovieId()));
 
         reviewsRv.setLayoutManager(new LinearLayoutManager(this));
         ReviewsAdapter adapter = new ReviewsAdapter(reviews);
@@ -169,7 +170,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(view -> this.supportFinishAfterTransition());
 
-        collapsingToolbarLayout.setTitle(movie.getTitle());
+        collapsingToolbarLayout.setTitle(movie.getMovieTitle());
 
         Picasso.get()
                 .load(imageBaseURL+movie.getBackdropPath())
@@ -180,7 +181,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .into(posterImageView);
 
 
-        titleTv.setText(movie.getTitle());
+        titleTv.setText(movie.getMovieTitle());
         ratingTv.setText(Double.toString(movie.getVoteAverage()));
         releaseDateTv.setText(movie.getReleaseDate());
         overviewTv.setText(movie.getOverview());

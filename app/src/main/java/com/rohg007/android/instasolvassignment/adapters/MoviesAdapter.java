@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.rohg007.android.instasolvassignment.R;
 import com.rohg007.android.instasolvassignment.models.Movie;
+import com.rohg007.android.instasolvassignment.models.MovieEntity;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -26,14 +27,14 @@ import static com.rohg007.android.instasolvassignment.utils.Keys.imageBaseURL;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesViewHolder> {
 
     public interface OnItemClickListener {
-        void onItemClick(Movie movie, ImageView imageView);
+        void onItemClick(MovieEntity movie, ImageView imageView);
     }
 
 
-    private ArrayList<Movie> movies;
+    private ArrayList<MovieEntity> movies;
     private final OnItemClickListener listener;
 
-    public MoviesAdapter(ArrayList<Movie> movies, OnItemClickListener listener) {
+    public MoviesAdapter(ArrayList<MovieEntity> movies, OnItemClickListener listener) {
         this.listener = listener;
         this.movies = movies;
     }
@@ -67,8 +68,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesView
             itemTitle = itemView.findViewById(R.id.item_title);
         }
 
-        public void bind(final Movie movie, final OnItemClickListener listener){
-            itemTitle.setText(movie.getTitle());
+        public void bind(final MovieEntity movie, final OnItemClickListener listener){
+            itemTitle.setText(movie.getMovieTitle());
             Picasso.get()
                     .load(imageBaseURL+movie.getPosterPath())
                     .into(itemImage);

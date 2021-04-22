@@ -1,5 +1,7 @@
 package com.rohg007.android.instasolvassignment.network;
 
+import android.util.Log;
+
 import com.rohg007.android.instasolvassignment.models.Review;
 import com.rohg007.android.instasolvassignment.models.ReviewResult;
 
@@ -45,6 +47,7 @@ public class ReviewsRepository {
             public void onFailure(Call<ReviewResult> call, Throwable t) {
                 progressMutableLiveData.setValue(false);
                 failureMutableLiveData.setValue(true);
+                Log.e("Review Failure: ", t.getLocalizedMessage());
             }
         });
     }

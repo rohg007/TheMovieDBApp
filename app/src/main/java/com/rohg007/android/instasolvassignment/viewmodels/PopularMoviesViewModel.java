@@ -2,11 +2,16 @@ package com.rohg007.android.instasolvassignment.viewmodels;
 
 import android.app.Application;
 
+import com.rohg007.android.instasolvassignment.models.MovieEntity;
 import com.rohg007.android.instasolvassignment.models.PopularMoviesResult;
 import com.rohg007.android.instasolvassignment.network.PopularMoviesRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class PopularMoviesViewModel extends AndroidViewModel {
@@ -15,7 +20,7 @@ public class PopularMoviesViewModel extends AndroidViewModel {
 
     public PopularMoviesViewModel(@NonNull Application application) {
         super(application);
-        popularMoviesRepository = PopularMoviesRepository.getInstance();
+        popularMoviesRepository = PopularMoviesRepository.getInstance(application);
     }
 
     public void getPopularMovies(){
@@ -32,5 +37,9 @@ public class PopularMoviesViewModel extends AndroidViewModel {
 
     public MutableLiveData<Boolean> getFailureLiveData(){
         return popularMoviesRepository.getResponseFailureLiveData();
+    }
+
+    public LiveData<List<MovieEntity>> getMovieEntityLiveData(){
+        return popularMoviesRepository.getMovieEntityLiveData();
     }
 }
